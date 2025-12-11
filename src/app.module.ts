@@ -30,7 +30,8 @@ import {TypeOrmModule} from "@nestjs/typeorm";
           }
 
       }),
-      UserModule
+      UserModule,
+
   ],
   controllers: [AppController],
   providers: [AppService],
