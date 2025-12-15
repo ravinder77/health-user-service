@@ -33,10 +33,10 @@ export class User {
     age: number;
 
     @Column({ type: 'float', nullable: true })
-    height: number; // cm
+    heightCm: number; // cm
 
     @Column({ type: 'float', nullable: true })
-    weight: number; // kg
+    weightKg: number; // kg
 
     @CreateDateColumn()
     createdAt: Date;
