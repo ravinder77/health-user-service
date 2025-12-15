@@ -38,6 +38,11 @@ export class User {
     @Column({ type: 'float', nullable: true })
     weightKg: number; // kg
 
+    @Column({
+        type: "boolean"
+    })
+    isActive: boolean;
+
     @CreateDateColumn()
     createdAt: Date;
 
