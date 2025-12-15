@@ -58,11 +58,5 @@ export class UserService {
         if(result.affected === 0) {
             throw new NotFoundException("User not found");
         }
-
     }
-
-
-
-
-
 }
