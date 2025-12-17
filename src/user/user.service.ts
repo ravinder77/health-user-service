@@ -1,4 +1,4 @@
-import {ConflictException, Injectable, Module, NotFoundException} from "@nestjs/common";
+import {ConflictException, Injectable, NotFoundException} from "@nestjs/common";
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {User} from "./entities/user.entity";
@@ -79,6 +79,13 @@ export class UserService {
         if(result.affected === 0) {
             throw new NotFoundException("User not found");
         }
-
     }
+
+    async removeRefreshToken(userId: number): Promise<void> {
+        await this.userRepository.update(
+            {id: userId},
+            {refreshTokenHash: undefined},
+        )
+    }
+
 }

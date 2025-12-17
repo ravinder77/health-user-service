@@ -30,7 +30,7 @@ export class User {
         type: "number",
         nullable: true,
     })
-    age: number;
+    age?: number;
 
     @Column({ type: 'float', nullable: true })
     heightCm: number; // cm
@@ -44,7 +44,7 @@ export class User {
     isActive: boolean;
 
     @Column({nullable: true})
-    refreshTokenHash: string;
+    refreshTokenHash?: string;
 
     @CreateDateColumn()
     createdAt: Date;
