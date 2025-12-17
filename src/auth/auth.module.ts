@@ -37,7 +37,4 @@ import jwtConfig from "../config/jwt.config";
         JwtStrategy,
     ],
 })
-export class AuthModule {
-
-
-}
+export class AuthModule {}
