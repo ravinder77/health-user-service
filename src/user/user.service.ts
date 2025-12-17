@@ -4,6 +4,7 @@ import {Repository} from "typeorm";
 import {User} from "./entities/user.entity";
 import {CreateUserDto} from "./dto/create-user.dto";
 import {UpdateUserDto} from "./dto/update-user.dto";
+import {hash} from "../common/utils/hash.utils";
 
 @Injectable()
 export class UserService {
@@ -67,5 +68,17 @@ export class UserService {
         if(result.affected === 0) {
             throw new NotFoundException("User not found");
         }
+    }
+
+    async updateRefreshToken(userId: number, refreshToken: string):Promise<void> {
+
+        const refreshTokenHash = await hash(refreshToken);
+
+        const result = await this.userRepository.update({id: userId}, {refreshTokenHash});
+
+        if(result.affected === 0) {
+            throw new NotFoundException("User not found");
+        }
+
     }
 }
