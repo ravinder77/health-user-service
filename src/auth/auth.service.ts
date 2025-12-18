@@ -13,7 +13,6 @@ export class AuthService {
         private readonly jwtService: JwtService,
     ) {}
 
-
     async generateTokens(userId: number, email: string):Promise<AuthTokens> {
         const payload = {
             sub: String(userId),
@@ -40,8 +39,6 @@ export class AuthService {
 
         const isMatch = await compare(password, user.passwordHash);
         if (!isMatch) throw new UnauthorizedException("Invalid Credentials");
-
-        const { passwordHash, ...safeUser } = user;
 
         return {
             id: user.id,
