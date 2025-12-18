@@ -27,7 +27,7 @@ export class User {
 
 
     @Column({
-        type: "number",
+        type: 'int',
         nullable: true,
     })
     age?: number;
