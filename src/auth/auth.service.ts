@@ -5,6 +5,7 @@ import {compare, hash} from "../common/utils/hash.utils";
 import {AuthTokens} from "./interfaces/token.interface";
 import {AuthResponse} from "./interfaces/auth-response.interface";
 import {ValidatedUser} from "./interfaces/validated-user.interface";
+import {User} from "../user/entities/user.entity";
 
 @Injectable()
 export class AuthService {
@@ -15,8 +16,8 @@ export class AuthService {
 
     async generateTokens(userId: number, email: string):Promise<AuthTokens> {
         const payload = {
-            sub: String(userId),
-            email,
+            sub: userId.toString(),
+            email: email,
         }
 
         const accessToken = this.jwtService.sign(payload, {
@@ -61,7 +62,8 @@ export class AuthService {
 
         return {
             user,
-            tokens
+            accessToken: tokens.accessToken,
+            refreshToken: tokens.refreshToken,
         }
     }
 
