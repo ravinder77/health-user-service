@@ -1,6 +1,5 @@
-import {Module} from "@nestjs/common";
+import {forwardRef, Module} from "@nestjs/common";
 import {AuthController} from "./auth.controller";
-import {UserModule} from "../user/user.module";
 import {PassportModule} from "@nestjs/passport";
 import {AuthService} from "./auth.service";
 import {LocalStrategy} from "./strategies/local.strategy";
@@ -8,9 +7,11 @@ import {JwtStrategy} from "./strategies/jwt.strategy";
 import {JwtModule} from "@nestjs/jwt";
 import {ConfigModule, ConfigService} from "@nestjs/config";
 import jwtConfig from "../config/jwt.config";
+import {UserModule} from "../user/user.module";
 
 @Module({
     imports: [
+        forwardRef(() => UserModule),
         PassportModule,
         ConfigModule.forFeature(jwtConfig),
         JwtModule.registerAsync({
@@ -36,5 +37,8 @@ import jwtConfig from "../config/jwt.config";
         LocalStrategy,
         JwtStrategy,
     ],
+    exports: [
+        AuthService,
+    ]
 })
 export class AuthModule {}

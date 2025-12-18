@@ -1,13 +1,12 @@
-import {Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UseGuards} from "@nestjs/common";
+import {Body, Controller, HttpCode, HttpStatus, Post, Req, Res, UseGuards} from "@nestjs/common";
 import {AuthService} from "./auth.service";
 import {JwtAuthGuard} from "./guards/jwt-auth.guard";
 import {CurrentUser} from "../common/decorators/current-user.decorator";
 import type {AuthUser} from "./interfaces/auth-user.interface";
 import type { Request, Response } from 'express';
 import {Public} from "../common/decorators/public.decorator";
-import {LocalAuthGuard} from "./guards/local-auth.guard";
 import {LoginDto} from "./dto/login.dto";
-import {setRefreshCookies} from "../common/utils/cookies.utils";
+import {clearAuthCookies, setRefreshCookies} from "../common/utils/cookies.utils";
 import {RefreshTokenGuard} from "./guards/refresh-token.guard";
 
 @Controller('auth')
@@ -27,11 +26,13 @@ export class AuthController {
         }
     }
 
-
     @Post('logout')
-    @UseGuards(JwtAuthGuard)
-    async logout(@CurrentUser() user: AuthUser){
+    async logout(
+        @CurrentUser() user: AuthUser,
+        @Res({passthrough: true}) res: Response
+    ){
         await this.authService.logout(user.id);
+        clearAuthCookies(res);
 
         return {
             message: "Logged out Successfully",
@@ -46,14 +47,15 @@ export class AuthController {
         @CurrentUser() user: AuthUser,
         @Res({passthrough: true}) res: Response,
     ){
-        const refreshToken = req.cookies.refreshToken;
+        const refreshToken = req.cookies.refresh_token;
         const tokens =  await this.authService.refreshToken(
             user.id,
             refreshToken,
-        )
+        );
         setRefreshCookies(res, tokens.refreshToken);
         return {
             message: "tokens refreshes successfully",
+            accessToken: tokens.accessToken,
         }
     }
 }

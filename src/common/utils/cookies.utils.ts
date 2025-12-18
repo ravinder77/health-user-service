@@ -2,7 +2,7 @@ import {Response } from 'express';
 
 export const setRefreshCookies = (res: Response, refreshToken: string) => {
     const isProd = process.env.NODE_ENV === 'production';
-    res.cookie('refreshToken', refreshToken, {
+    res.cookie('refresh_token', refreshToken, {
         httpOnly: true,
         secure: isProd,
         sameSite: 'lax',
@@ -11,5 +11,7 @@ export const setRefreshCookies = (res: Response, refreshToken: string) => {
 }
 
 export const clearAuthCookies = (res: Response) => {
-    res.clearCookie('refresh_token');
+    res.clearCookie('refresh_token', {
+        path: 'auth/refresh-token',
+    });
 }
