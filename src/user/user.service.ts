@@ -70,9 +70,7 @@ export class UserService {
         }
     }
 
-    async updateRefreshToken(userId: number, refreshToken: string):Promise<void> {
-
-        const refreshTokenHash = await hash(refreshToken);
+    async updateRefreshToken(userId: number, refreshTokenHash: string):Promise<void> {
 
         const result = await this.userRepository.update({id: userId}, {refreshTokenHash});
 

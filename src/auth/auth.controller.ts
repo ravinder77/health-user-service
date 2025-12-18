@@ -7,10 +7,13 @@ export class AuthController {
 
 
     @Post('login')
-    async login(){}
+    async login(){
+
+    }
 
     @Post('logout')
     async logout(){}
 
-
+    @Post('refresh-token')
+    async refreshToken(){}
 }

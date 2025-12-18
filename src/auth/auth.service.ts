@@ -1,10 +1,8 @@
-import {Injectable, NotFoundException, UnauthorizedException} from "@nestjs/common";
+import {Injectable, UnauthorizedException} from "@nestjs/common";
 import {UserService} from "../user/user.service";
 import {JwtService} from "@nestjs/jwt";
-import {User} from "../user/entities/user.entity";
 import {compare, hash} from "../common/utils/hash.utils";
 import {AuthTokens} from "./interfaces/token.interface";
-import {AuthUser} from "./interfaces/auth-user.interface";
 import {AuthResponse} from "./interfaces/auth-response.interface";
 import {ValidatedUser} from "./interfaces/validated-user.interface";
 
@@ -52,17 +50,21 @@ export class AuthService {
 
     }
 
+
     async login(email: string, password: string): Promise<AuthResponse> {
         const user = await this.validateUser(email, password);
-        if (!user) throw new UnauthorizedException("Invalid Credentials");
 
         const tokens = await this.generateTokens(user.id, user.email);
 
-        await this.userService.updateRefreshToken(user.id, tokens.refreshToken);
+        //Hash refresh token
+        const refreshTokenHash = await hash(tokens.refreshToken);
+
+        // Store hashed refresh token
+        await this.userService.updateRefreshToken(user.id, refreshTokenHash);
 
         return {
             user,
-            accessToken: tokens.accessToken,
+            tokens
         }
     }
 
@@ -74,10 +76,14 @@ export class AuthService {
         const isValid = await compare(refreshToken, user.refreshTokenHash);
         if (!isValid) throw new UnauthorizedException("Invalid Credentials");
 
-        //Rotation
+        // Generate new tokens: Rotation
         const tokens:AuthTokens = await this.generateTokens(user.id, user.email);
 
-        await this.userService.updateRefreshToken(user.id, refreshToken);
+        // Hash new refresh token
+        const newRefreshTokenHash = await hash(tokens.refreshToken);
+
+        // update the refresh token
+        await this.userService.updateRefreshToken(user.id, newRefreshTokenHash);
         return tokens;
     }
 
@@ -85,11 +91,5 @@ export class AuthService {
     async logout(userId: number):Promise<void> {
         await this.userService.removeRefreshToken(userId);
     }
-
-
-
-
-
-
 
 }
