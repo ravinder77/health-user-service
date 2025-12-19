@@ -35,7 +35,7 @@ export class AuthService {
     }
 
     async validateUser(email: string, password: string):Promise<ValidatedUser> {
-        const user = await this.userService.findByEmail(email);
+        const user = await this.userService.getUserByEmail(email);
         if (!user) throw new UnauthorizedException("Invalid Credentials");
 
         const isMatch = await compare(password, user.passwordHash);
@@ -68,7 +68,7 @@ export class AuthService {
     }
 
     async refreshToken(userId: number, refreshToken: string):Promise<AuthTokens> {
-        const user = await this.userService.findById(userId);
+        const user = await this.userService.getUserById(userId);
 
         if (!user || !user.refreshTokenHash) throw new UnauthorizedException("Invalid Credentials");
 

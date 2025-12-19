@@ -1,4 +1,5 @@
 import {Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn} from "typeorm";
+import {Exclude} from "class-transformer";
 
 @Entity("users")
 export class User {
@@ -18,6 +19,7 @@ export class User {
     })
     email: string;
 
+    @Exclude()
     @Column({
         type: 'varchar',
         length: 255, // for hashed password
@@ -44,6 +46,7 @@ export class User {
     })
     isActive: boolean;
 
+    @Exclude()
     @Column({nullable: true})
     refreshTokenHash?: string;
 
