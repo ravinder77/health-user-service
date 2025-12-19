@@ -14,7 +14,7 @@ export class UserService {
     ){}
 
     // Create User
-    async create(dto: CreateUserDto): Promise<User> {
+    async createUser(dto: CreateUserDto): Promise<User> {
         const existingUser = await this.userRepository.findOne({
             where: {email: dto.email}
         });
@@ -22,8 +22,15 @@ export class UserService {
         if (existingUser) {
             throw new ConflictException("Email already exists");
         }
+        const passwordHash = await hash(dto.password);
 
-        const user = this.userRepository.create(dto);
+        const user = this.userRepository.create({
+            email: dto.email,
+            name: dto.name,
+            passwordHash,
+            age: dto.age,
+            isActive: true
+        });
         return await this.userRepository.save(user);
     }
 

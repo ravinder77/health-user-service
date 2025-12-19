@@ -39,7 +39,8 @@ export class User {
     weightKg: number; // kg
 
     @Column({
-        type: "boolean"
+        type: "boolean",
+        default: true,
     })
     isActive: boolean;
 

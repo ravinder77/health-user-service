@@ -7,7 +7,7 @@ export class CreateUserDto {
 
     @IsNotEmpty()
     @IsString()
-    fullName: string;
+    name: string;
 
     @IsNotEmpty()
     @IsString()
@@ -17,5 +17,7 @@ export class CreateUserDto {
     @IsInt()
     @Min(10)
     @Max(100)
-    age: number;
+    age?: number;
+
+
 }
